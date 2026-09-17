@@ -1,3 +1,114 @@
 {
-  "artifacts": []
+  "artifacts": [
+    {
+      "id": "artifacts/Mv-Checklist-fixed.html",
+      "title": "React Artifact",
+      "description": "",
+      "image": "",
+      "type": "Behind the scenes",
+      "date": "",
+      "url": "/artifacts/Mv-Checklist-fixed.html",
+      "accent": 0
+    },
+    {
+      "id": "artifacts/act_x5f_final_x5f_versions.html",
+      "title": "React Artifact",
+      "description": "",
+      "image": "",
+      "type": "Behind the scenes",
+      "date": "",
+      "url": "/artifacts/act_x5f_final_x5f_versions.html",
+      "accent": 1
+    },
+    {
+      "id": "artifacts/acts_x5f_ii_x5f_director_x5f_board.html",
+      "title": "React Artifact",
+      "description": "",
+      "image": "",
+      "type": "Behind the scenes",
+      "date": "",
+      "url": "/artifacts/acts_x5f_ii_x5f_director_x5f_board.html",
+      "accent": 2
+    },
+    {
+      "id": "artifacts/bts_x5f_public_x5f_share_x5f_meta.html",
+      "title": "React Artifact",
+      "description": "",
+      "image": "",
+      "type": "Behind the scenes",
+      "date": "",
+      "url": "/artifacts/bts_x5f_public_x5f_share_x5f_meta.html",
+      "accent": 0
+    },
+    {
+      "id": "artifacts/goonee-ruler-input.html",
+      "title": "React Artifact",
+      "description": "",
+      "image": "",
+      "type": "Behind the scenes",
+      "date": "",
+      "url": "/artifacts/goonee-ruler-input.html",
+      "accent": 1
+    },
+    {
+      "id": "artifacts/goonee-timing-lab.html",
+      "title": "React Artifact",
+      "description": "",
+      "image": "",
+      "type": "Behind the scenes",
+      "date": "",
+      "url": "/artifacts/goonee-timing-lab.html",
+      "accent": 2
+    },
+    {
+      "id": "artifacts/goonee_x5f_cat_x5f_type_x5f_deploy.html",
+      "title": "React Artifact",
+      "description": "",
+      "image": "",
+      "type": "Behind the scenes",
+      "date": "",
+      "url": "/artifacts/goonee_x5f_cat_x5f_type_x5f_deploy.html",
+      "accent": 0
+    },
+    {
+      "id": "artifacts/goonee_x5f_mv_x5f_final_x5f_10.html",
+      "title": "React Artifact",
+      "description": "",
+      "image": "",
+      "type": "Behind the scenes",
+      "date": "",
+      "url": "/artifacts/goonee_x5f_mv_x5f_final_x5f_10.html",
+      "accent": 1
+    },
+    {
+      "id": "artifacts/mv_x5f_canvas_x5f_v3_x5f_meta.html",
+      "title": "React Artifact",
+      "description": "",
+      "image": "",
+      "type": "Behind the scenes",
+      "date": "",
+      "url": "/artifacts/mv_x5f_canvas_x5f_v3_x5f_meta.html",
+      "accent": 2
+    },
+    {
+      "id": "artifacts/one_x5f_beside_x5f_you_x5f_final.html",
+      "title": "React Artifact",
+      "description": "",
+      "image": "",
+      "type": "Behind the scenes",
+      "date": "",
+      "url": "/artifacts/one_x5f_beside_x5f_you_x5f_final.html",
+      "accent": 0
+    },
+    {
+      "id": "artifacts/tiful-reveal-checklist.html",
+      "title": "React Artifact",
+      "description": "",
+      "image": "",
+      "type": "Behind the scenes",
+      "date": "",
+      "url": "/artifacts/tiful-reveal-checklist.html",
+      "accent": 1
+    }
+  ]
 }
