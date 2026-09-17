@@ -17,11 +17,131 @@
 <section id="artifacts"><div class="wrap"><div class="section-head"><div><div class="kicker mono">03 / Behind the work</div><h2>Artifacts</h2></div><p>สตอรี่บอร์ด แผนงาน และเบื้องหลังจากไฟล์ต้นฉบับ เพิ่มใหม่จาก GitHub โดยไม่ต้องแก้หน้าเว็บ</p></div><div class="artifact-grid" id="artifactGrid" aria-live="polite"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div></div></section>
 <dialog class="artifact-dialog" id="artifactDialog"><div class="dialog-bar"><strong id="dialogTitle">Artifact Preview</strong><div class="dialog-actions"><a id="openArtifact" target="_blank" rel="noopener">เปิดเต็มหน้า ↗</a><button id="closeArtifact" type="button" aria-label="ปิด">ปิด</button></div></div><iframe id="artifactFrame" title="Artifact preview" sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe></dialog>
 <script>
-const artifactGrid=document.querySelector('#artifactGrid'),artifactDialog=document.querySelector('#artifactDialog'),artifactFrame=document.querySelector('#artifactFrame'),dialogTitle=document.querySelector('#dialogTitle'),openArtifact=document.querySelector('#openArtifact');
-function safeText(value){return String(value||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-function showArtifact(url,title){artifactFrame.src=url;dialogTitle.textContent=title;openArtifact.href=url;artifactDialog.showModal()}
-document.querySelector('#closeArtifact').addEventListener('click',()=>artifactDialog.close());artifactDialog.addEventListener('click',event=>{if(event.target===artifactDialog)artifactDialog.close()});artifactDialog.addEventListener('close',()=>artifactFrame.removeAttribute('src'));
-fetch('/artifacts/manifest.json').then(response=>{if(!response.ok)throw Error();return response.json()}).then(({artifacts})=>{if(!artifacts?.length){artifactGrid.innerHTML='<div class="empty-artifacts">ยังไม่มี Artifact — อัปโหลดไฟล์ HTML เข้าโฟลเดอร์ <b>artifacts/</b> แล้วรายการจะขึ้นที่นี่อัตโนมัติ</div>';return}artifactGrid.innerHTML=artifacts.map((item,index)=>`<article class="artifact" data-accent="${item.accent??index%3}"><div class="artifact-cover">${item.image?`<img src="${safeText(item.image)}" alt="" loading="lazy">`:''}</div><div class="artifact-copy"><div class="artifact-type">${safeText(item.type)}</div><h3>${safeText(item.title)}</h3>${item.description?`<p>${safeText(item.description)}</p>`:'<p>เปิดดูเบื้องหลังและไฟล์วางแผนฉบับเต็ม</p>'}<div class="artifact-actions"><button class="small-btn preview-artifact" data-url="${safeText(item.url)}" data-title="${safeText(item.title)}">Preview</button><a class="small-btn" href="${safeText(item.url)}" target="_blank" rel="noopener">เต็มหน้า ↗</a></div></div></article>`).join('');artifactGrid.querySelectorAll('.preview-artifact').forEach(button=>button.addEventListener('click',()=>showArtifact(button.dataset.url,button.dataset.title)))}).catch(()=>{artifactGrid.innerHTML='<div class="empty-artifacts">ไม่สามารถอ่านรายการ Artifact ได้ในขณะนี้</div>'});
+const artifactGrid = document.querySelector('#artifactGrid');
+const artifactDialog = document.querySelector('#artifactDialog');
+const artifactFrame = document.querySelector('#artifactFrame');
+const dialogTitle = document.querySelector('#dialogTitle');
+const openArtifact = document.querySelector('#openArtifact');
+
+function safeText(value) {
+  return String(value || '').replace(/[&<>\'\"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+}
+
+function compactText(value, fallback = '') {
+  const text = String(value || '').replace(/\s+/g, ' ').trim();
+  return text || fallback;
+}
+
+function showArtifact(url, title) {
+  artifactFrame.src = url;
+  dialogTitle.textContent = title;
+  openArtifact.href = url;
+  artifactDialog.showModal();
+}
+
+document.querySelector('#closeArtifact').addEventListener('click', () => artifactDialog.close());
+artifactDialog.addEventListener('click', event => {
+  if (event.target === artifactDialog) artifactDialog.close();
+});
+artifactDialog.addEventListener('close', () => artifactFrame.removeAttribute('src'));
+
+// Put the artifact URLs here in data/artifacts.json.
+// Each item can contain: title, description, url, type, image.
+async function fetchOgData(url) {
+  const target = String(url || '').trim();
+  if (!target) {
+    return { title: 'Artifact', description: 'Open this link and view the full story.', image: '', url: target, type: 'External link' };
+  }
+
+  try {
+    const parsed = new URL(target);
+    const proxyUrl = `https://r.jina.ai/http://${parsed.host}${parsed.pathname}${parsed.search}`;
+    const response = await fetch(proxyUrl, { headers: { Accept: 'text/html,application/xhtml+xml' } });
+    if (!response.ok) throw new Error('Metadata request failed');
+
+    const html = await response.text();
+    const siteName = parsed.hostname.replace(/^www\./, '');
+    const title = compactText(
+      html.match(/<meta[^>]+(?:property|name)=["']og:title["'][^>]*content=["']([^"']+)["'][^>]*>/i)?.[1] ||
+      html.match(/<meta[^>]+(?:property|name)=["']twitter:title["'][^>]*content=["']([^"']+)["'][^>]*>/i)?.[1] ||
+      html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] ||
+      siteName,
+      siteName
+    );
+
+    const description = compactText(
+      html.match(/<meta[^>]+(?:property|name)=["']og:description["'][^>]*content=["']([^"']+)["'][^>]*>/i)?.[1] ||
+      html.match(/<meta[^>]+(?:property|name)=["']description["'][^>]*content=["']([^"']+)["'][^>]*>/i)?.[1] ||
+      'Open this link and view the full story.'
+    );
+
+    const image =
+      html.match(/<meta[^>]+(?:property|name)=["']og:image["'][^>]*content=["']([^"']+)["'][^>]*>/i)?.[1] ||
+      html.match(/<meta[^>]+(?:property|name)=["']twitter:image["'][^>]*content=["']([^"']+)["'][^>]*>/i)?.[1] ||
+      '';
+
+    return { title, description, image, url: target, type: 'External link' };
+  } catch {
+    return {
+      title: String(target).replace(/^https?:\/\//, '').replace(/\/$/, '') || 'Artifact',
+      description: 'Open this link and view the full story.',
+      image: '',
+      url: target,
+      type: 'External link'
+    };
+  }
+}
+
+async function renderArtifacts() {
+  try {
+    const response = await fetch('/data/artifacts.json');
+    if (!response.ok) {
+      throw new Error('Artifacts manifest not found');
+    }
+
+    const items = await response.json();
+    if (!Array.isArray(items) || !items.length) {
+      artifactGrid.innerHTML = '<div class="empty-artifacts">ยังไม่มี Artifact — ใส่ลิงก์ในไฟล์ <b>data/artifacts.json</b> แล้วเว็บจะดึง OG image มาแสดงอัตโนมัติ</div>';
+      return;
+    }
+
+    const resolved = await Promise.all(items.map(async (item, index) => {
+      const meta = await fetchOgData(item.url || item.link);
+      return {
+        id: item.id || item.url || item.link || index,
+        title: item.title || meta.title || 'Artifact',
+        description: item.description || meta.description || 'Open this link and view the full story.',
+        image: item.image || meta.image || '',
+        type: item.type || meta.type || 'External link',
+        url: item.url || item.link,
+        accent: index % 3,
+      };
+    }));
+
+    artifactGrid.innerHTML = resolved.map((item, index) => `
+      <article class="artifact" data-accent="${item.accent ?? index % 3}">
+        <div class="artifact-cover">${item.image ? `<img src="${safeText(item.image)}" alt="${safeText(item.title)}" loading="lazy">` : ''}</div>
+        <div class="artifact-copy">
+          <div class="artifact-type">${safeText(item.type)}</div>
+          <h3>${safeText(item.title)}</h3>
+          <p>${safeText(item.description)}</p>
+          <div class="artifact-actions">
+            <button class="small-btn preview-artifact" data-url="${safeText(item.url)}" data-title="${safeText(item.title)}">Preview</button>
+            <a class="small-btn" href="${safeText(item.url)}" target="_blank" rel="noopener">เต็มหน้า ↗</a>
+          </div>
+        </div>
+      </article>
+    `).join('');
+
+    artifactGrid.querySelectorAll('.preview-artifact').forEach(button => {
+      button.addEventListener('click', () => showArtifact(button.dataset.url, button.dataset.title));
+    });
+  } catch {
+    artifactGrid.innerHTML = '<div class="empty-artifacts">ไม่สามารถอ่านรายการ Artifact ได้ในขณะนี้</div>';
+  }
+}
+
+renderArtifacts();
 </script>
 <footer class="footer wrap"><span><b>GOONEE</b> / GOO UNIVERS</span><span>ARTIST • MUSIC • PODCAST • ARTIFACTS</span></footer>
 <script>const grid=document.querySelector('#episodeGrid'),statusEl=document.querySelector('#status');const esc=s=>String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));fetch('/api/youtube-playlist').then(r=>{if(!r.ok)throw Error();return r.json()}).then(({videos})=>{if(!videos?.length)throw Error();grid.innerHTML=videos.map((v,i)=>`<a class="episode" href="https://www.youtube.com/watch?v=${encodeURIComponent(v.id)}&list=PLrHok9wh3BEBopCGgpSnm_Q8V04KL877C" target="_blank" rel="noopener"><div class="thumb"><img src="${esc(v.thumbnail)}" alt="" loading="lazy"><span class="play"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div><div class="episode-body"><div class="number">Episode ${String(i+1).padStart(2,'0')}</div><h3>${esc(v.title)}</h3></div></a>`).join('');statusEl.textContent=`${videos.length} ตอน • อัปเดตอัตโนมัติ`}).catch(()=>{grid.innerHTML='<div class="error">ยังโหลดรายชื่อตอนไม่สำเร็จ — <a href="https://www.youtube.com/playlist?list=PLrHok9wh3BEBopCGgpSnm_Q8V04KL877C" target="_blank" rel="noopener">เปิดเพลย์ลิสต์บน YouTube</a></div>';statusEl.textContent='YouTube Playlist'});</script></body></html>
