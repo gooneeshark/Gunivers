@@ -1,0 +1,74 @@
+[
+  {
+    "title": "GooNee — Portfolio Preview",
+    "type": "External link",
+    "description": "Preview site for GooNee with the current visual identity and artist profile.",
+    "url": "http://goonoob.vercel.app/"
+  },
+  {
+    "title": "Project Link",
+    "type": "Reference",
+    "description": "Add your new artifact URL here and the page will render a preview card automatically.",
+    "url": "https://g-univers.netlify.app/artifacts/1.html"
+  },
+  {
+    "title": "Project Link",
+    "type": "Reference",
+    "description": "Add your new artifact URL here and the page will render a preview card automatically.",
+    "url": "https://g-univers.netlify.app/artifacts/2.html"
+  },
+  {
+    "title": "Project Link",
+    "type": "Reference",
+    "description": "Add your new artifact URL here and the page will render a preview card automatically.",
+    "url": "https://g-univers.netlify.app/artifacts/3.html"
+  },
+  {
+    "title": "Project Link",
+    "type": "Reference",
+    "description": "Add your new artifact URL here and the page will render a preview card automatically.",
+    "url": "https://g-univers.netlify.app/artifacts/4.html"
+  },
+  {
+    "title": "Project Link",
+    "type": "Reference",
+    "description": "Add your new artifact URL here and the page will render a preview card automatically.",
+    "url": "https://g-univers.netlify.app/artifacts/5.html"
+  },
+  {
+    "title": "Project Link",
+    "type": "Reference",
+    "description": "Add your new artifact URL here and the page will render a preview card automatically.",
+    "url": "https://g-univers.netlify.app/artifacts/6.html"
+  },
+  {
+    "title": "Project Link",
+    "type": "Reference",
+    "description": "Add your new artifact URL here and the page will render a preview card automatically.",
+    "url": "https://g-univers.netlify.app/artifacts/7.html"
+  },
+  {
+    "title": "Project Link",
+    "type": "Reference",
+    "description": "Add your new artifact URL here and the page will render a preview card automatically.",
+    "url": "https://g-univers.netlify.app/artifacts/8.html"
+  },
+  {
+    "title": "Project Link",
+    "type": "Reference",
+    "description": "Add your new artifact URL here and the page will render a preview card automatically.",
+    "url": "https://g-univers.netlify.app/artifacts/9.html"
+  },
+  {
+    "title": "Project Link",
+    "type": "Reference",
+    "description": "Add your new artifact URL here and the page will render a preview card automatically.",
+    "url": "https://g-univers.netlify.app/artifacts/10.html"
+  },
+  {
+    "title": "Project Link",
+    "type": "Reference",
+    "description": "Add your new artifact URL here and the page will render a preview card automatically.",
+    "url": "https://g-univers.netlify.app/artifacts/11.html"
+  }
+]
